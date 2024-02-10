@@ -37,7 +37,15 @@ def procesarArchivo(archivo_entrada, archivo_salida):
         with open(archivo_entrada, 'r') as archivo_lectura:
             with open(archivo_salida, 'w') as archivo_escritura:
                 for linea in archivo_lectura:
-                    #Llama a la función X con cada línea leída.
+                    #Comprobar si es un URL limpia (empieza por h)
+                    if linea.startswith('h'):
+                        printVerde("Es un URL")
+                    else:
+                        printRojo("No es un URL puro, formateando a URL...")
+                        #Buscar la primera aparición de "h" en el string y
+                        #hacer substring a partir de la h
+                        linea=linea[linea.find('h'):]
+                            
                     lineaProcesada=procesarLinea(linea.strip())
                     
                     #Buscar en archivo 2 si la ID ya existe
@@ -48,7 +56,7 @@ def procesarArchivo(archivo_entrada, archivo_salida):
                         #Escribe la línea en el archivo de salida.
                         archivo_escritura.write(lineaProcesada.rstrip() + '\n')
 
-        printBlue("Proceso completado.")
+        printAmarillo("Proceso completado.")
     except FileNotFoundError:
         printAmarillo(f"Error: No se pudo encontrar el archivo {archivo_entrada}.")
     except Exception as e:
