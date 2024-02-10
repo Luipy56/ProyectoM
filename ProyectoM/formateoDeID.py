@@ -1,24 +1,34 @@
+RESET = "\033[0m"
+RED = "\033[31m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
+VERDE = "\033[32m"
+
+def printAmarillo(texto):
+    print(f"{YELLOW}{texto}{RESET}")
+def printBlue(texto):
+    print(f"{BLUE}{texto}{RESET}")
+def printRojo(texto):
+    print(f"{RED}{texto}{RESET}")
+def printVerde(texto):
+    print(f"{VERDE}{texto}{RESET}")
+
 def procesarLinea(linea):
-    #Formateo de ID
-    print("Procesando línea:", linea)
+    #Sacar ID según tipo de link y formatearla
+    printAmarillo(f"Procesando línea: {linea}")
     if linea[13]==".":
-        print("Es un share normal")
+        printBlue("Es un share normal")
         lineaProcesada=pieDeURL+linea[17:28]
     elif linea[8]=="y":
-        print("Es un share short")
+        printBlue("Es un share short")
         lineaProcesada=pieDeURL+linea[27:38]
     elif linea[24]=="w":
-        print("Es una URL normal")
+        printBlue("Es una URL normal")
         lineaProcesada=linea
     elif linea[24]=="s":
-        print("Es una URL short")
+        printBlue("Es una URL short")
         lineaProcesada=pieDeURL+linea[31:42]
-    else: print("Something wrong")
-    
-    if buscar_frase_en_archivo(lineaProcesada, archivo_a_verificar):
-        print(f"La frase '{lineaProcesada}' está en el archivo.")
-    else:
-        print(f"La frase '{lineaProcesada}' no está en el archivo.")
+    else: printBlue("Something wrong")
     
     return lineaProcesada
 
@@ -27,15 +37,30 @@ def procesarArchivo(archivo_entrada, archivo_salida):
         with open(archivo_entrada, 'r') as archivo_lectura:
             with open(archivo_salida, 'w') as archivo_escritura:
                 for linea in archivo_lectura:
-                    #Llama a la función X con cada línea leída.
+                    #Comprobar si es un URL limpia (empieza por h)
+                    if linea.startswith('h'):
+                        printVerde("Es un URL")
+                    else:
+                        printRojo("No es un URL puro, formateando a URL...")
+                        #Buscar la primera aparición de "h" en el string y
+                        #hacer substring a partir de la h
+                        linea=linea[linea.find('h'):]
+                            
                     lineaProcesada=procesarLinea(linea.strip())
-                    #Escribe la línea en el archivo de salida.
-                    archivo_escritura.write(lineaProcesada.rstrip() + '\n')
-        print("Proceso completado.")
+                    
+                    #Buscar en archivo 2 si la ID ya existe
+                    if buscar_frase_en_archivo(lineaProcesada, archivo_a_verificar):
+                        printRojo(f"La frase '{lineaProcesada}' SÍ está en el archivo almacén.")
+                    else:
+                        printVerde(f"La frase '{lineaProcesada}' NO está en el archivo.")
+                        #Escribe la línea en el archivo de salida.
+                        archivo_escritura.write(lineaProcesada.rstrip() + '\n')
+
+        printAmarillo("Proceso completado.")
     except FileNotFoundError:
-        print(f"Error: No se pudo encontrar el archivo {archivo_entrada}.")
+        printAmarillo(f"Error: No se pudo encontrar el archivo {archivo_entrada}.")
     except Exception as e:
-        print(f"Error inesperado: {str(e)}")
+        printRojo(f"Error inesperado: {str(e)}")
 
 def buscar_frase_en_archivo(frase, ruta_archivo):
     try:
@@ -53,15 +78,10 @@ def buscar_frase_en_archivo(frase, ruta_archivo):
         return False
     
 #Nombre del archivo de entrada y salida
-archivo_entrada = 'ProyectoM/archivo1.txt'
-archivo_salida = 'ProyectoM/archivo2.txt'
-archivo_a_verificar = "ProyectoM/archivo3.txt"
-
+archivo_entrada = 'ProyectoM/URLsNuevas.txt'
+archivo_salida = 'ProyectoM/URLsADescargar.txt'
+archivo_a_verificar = "ProyectoM/AlmacenURLs.txt"
 pieDeURL="https://www.youtube.com/watch?v="
-
-
-
-
 
 #Llama a la función para procesar el archivo
 procesarArchivo(archivo_entrada, archivo_salida)
