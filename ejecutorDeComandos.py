@@ -19,7 +19,7 @@ def ejecutarComandoDesdeArchivo(archivo):
         lineas = f.readlines()
         for linea in lineas:
             #Construir el comando seguido de la ruta
-            comando = f'youtube-dl --geo-bypass -f bestvideo-bestaudio -o "RUTAAAAAA" "{linea}"'
+            comando = f'youtube-dl --geo-bypass -f bestvideo-bestaudio -o "RUTAAAAAA/%(title)s.%(ext)s" "{linea}"'
 
             #Ejecutar el comando en la terminal
             subprocess.run(comando, shell=True)
