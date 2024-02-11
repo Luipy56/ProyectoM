@@ -78,6 +78,28 @@ def buscarLineaEnAlmacen(frase, ruta_archivo):
         print(f"Error inesperado: {e}")
         return False
 
+def verificarLineasRepetidas(archivo):
+    try:
+        with open(archivo, 'r') as file:
+            lineas = file.readlines()
+            
+            # Eliminar caracteres de nueva línea al final de cada línea
+            lineas = [linea.strip() for linea in lineas]
+
+            # Verificar si hay líneas duplicadas
+            if len(lineas) == len(set(lineas)):
+                print("No hay líneas duplicadas en el archivo.")
+            else:
+                print("Se encontraron líneas duplicadas en el archivo.")
+                lineas_duplicadas = set()
+                lineas_repetidas = [linea for linea in lineas if linea in lineas_duplicadas or lineas_duplicadas.add(linea)]
+                print("Líneas duplicadas:")
+                for linea in lineas_repetidas:
+                    print(linea)
+    except FileNotFoundError:
+        print(f"El archivo '{archivo}' no fue encontrado.")
+    except Exception as e:
+        print(f"Error al procesar el archivo: {e}")
 def almacenarLineas(archivo2,archivo3):
     with open(archivo2, 'r') as f2, open(archivo3, 'a') as f3:
         lineas = f2.readlines()
@@ -91,6 +113,8 @@ pieDeURL="https://www.youtube.com/watch?v="
 
 #Llama a la función para procesar el archivo
 procesarArchivo(archivoNuevas, archivoProcesado)
+#Llamar función lineas repetidas
+verificarLineasRepetidas(archivoProcesado)
 #Llamar función almacenado
 almacenarLineas(archivoProcesado, archivoAlmacen)
 

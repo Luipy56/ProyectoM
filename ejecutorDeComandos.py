@@ -24,5 +24,5 @@ def ejecutarComandoDesdeArchivo(archivo):
             #Ejecutar el comando en la terminal
             subprocess.run(comando, shell=True)
 
-rutaArchivo = 'test.txt'  # Reemplaza con el nombre de tu archivo
+rutaArchivo = 'test.txt'
 ejecutarComandoDesdeArchivo(rutaArchivo)
