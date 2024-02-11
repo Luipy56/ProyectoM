@@ -88,18 +88,19 @@ def verificarLineasRepetidas(archivo):
 
             # Verificar si hay líneas duplicadas
             if len(lineas) == len(set(lineas)):
-                print("No hay líneas duplicadas en el archivo.")
+                printVerde("No hay líneas duplicadas en el archivo.")
             else:
-                print("Se encontraron líneas duplicadas en el archivo.")
+                printRojo("Se encontraron líneas duplicadas en el archivo.")
                 lineas_duplicadas = set()
                 lineas_repetidas = [linea for linea in lineas if linea in lineas_duplicadas or lineas_duplicadas.add(linea)]
-                print("Líneas duplicadas:")
+                printRojo("Líneas duplicadas:")
                 for linea in lineas_repetidas:
-                    print(linea)
+                    printAmarillo(linea)
     except FileNotFoundError:
-        print(f"El archivo '{archivo}' no fue encontrado.")
+        printRojo(f"El archivo '{archivo}' no fue encontrado.")
     except Exception as e:
-        print(f"Error al procesar el archivo: {e}")
+        printRojo(f"Error al procesar el archivo: {e}")
+
 def almacenarLineas(archivo2,archivo3):
     with open(archivo2, 'r') as f2, open(archivo3, 'a') as f3:
         lineas = f2.readlines()
