@@ -3,7 +3,6 @@ RED = "\033[31m"
 YELLOW = "\033[33m"
 BLUE = "\033[34m"
 VERDE = "\033[32m"
-
 def printAmarillo(texto):
     print(f"{YELLOW}{texto}{RESET}")
 def printBlue(texto):
@@ -45,16 +44,18 @@ def procesarArchivo(archivo_entrada, archivo_salida):
                         #Buscar la primera aparición de "h" en el string y
                         #hacer substring a partir de la h
                         linea=linea[linea.find('h'):]
-                            
+                    
+                    #Procesar linea para sacar ID
                     lineaProcesada=procesarLinea(linea.strip())
                     
-                    #Buscar en archivo 2 si la ID ya existe
-                    if buscar_frase_en_archivo(lineaProcesada, archivo_a_verificar):
+                    #Buscar en archivo 2 si la ID en la linea ya existe
+                    if buscarLineaEnAlmacen(lineaProcesada, archivoAlmacen):
                         printRojo(f"La frase '{lineaProcesada}' SÍ está en el archivo almacén.")
                     else:
                         printVerde(f"La frase '{lineaProcesada}' NO está en el archivo.")
                         #Escribe la línea en el archivo de salida.
                         archivo_escritura.write(lineaProcesada.rstrip() + '\n')
+                    printBlue("Siguiente línea")
 
         printAmarillo("Proceso completado.")
     except FileNotFoundError:
@@ -62,7 +63,7 @@ def procesarArchivo(archivo_entrada, archivo_salida):
     except Exception as e:
         printRojo(f"Error inesperado: {str(e)}")
 
-def buscar_frase_en_archivo(frase, ruta_archivo):
+def buscarLineaEnAlmacen(frase, ruta_archivo):
     try:
         with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
             lineas = archivo.readlines()
@@ -76,13 +77,20 @@ def buscar_frase_en_archivo(frase, ruta_archivo):
     except Exception as e:
         print(f"Error inesperado: {e}")
         return False
-    
-#Nombre del archivo de entrada y salida
-archivo_entrada = 'ProyectoM/URLsNuevas.txt'
-archivo_salida = 'ProyectoM/URLsADescargar.txt'
-archivo_a_verificar = "ProyectoM/AlmacenURLs.txt"
+
+def almacenarLineas(archivo2,archivo3):
+    with open(archivo2, 'r') as f2, open(archivo3, 'a') as f3:
+        lineas = f2.readlines()
+        f3.writelines(lineas)
+
+#Variables
+archivoNuevas = 'URLsNuevas.txt'
+archivoProcesado = 'URLsADescargar.txt'
+archivoAlmacen = "AlmacenURLs.txt"
 pieDeURL="https://www.youtube.com/watch?v="
 
 #Llama a la función para procesar el archivo
-procesarArchivo(archivo_entrada, archivo_salida)
+procesarArchivo(archivoNuevas, archivoProcesado)
+#Llamar función almacenado
+almacenarLineas(archivoProcesado, archivoAlmacen)
 
